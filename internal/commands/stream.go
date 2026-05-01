@@ -97,7 +97,16 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 		file.ID,
 	)
 	hash := utils.GetShortHash(fullHash)
-	link := fmt.Sprintf("%s/stream/%d?hash=%s", config.ValueOf.Host, messageID, hash)
+
+	// Make the filename safe for the URL by replacing spaces with underscores
+	safeFileName := "downloaded_file"
+	if file.FileName != "" {
+		safeFileName = strings.ReplaceAll(file.FileName, " ", "_")
+	}
+
+	// Inject the safe filename directly into the URL structure
+	link := fmt.Sprintf("%s/stream/%d/%s?hash=%s", config.ValueOf.Host, messageID, safeFileName, hash)
+	
 	text := styling.Code(link)
 	row := tg.KeyboardButtonRow{
 		Buttons: []tg.KeyboardButtonClass{
