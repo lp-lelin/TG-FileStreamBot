@@ -98,14 +98,8 @@ func sendLink(ctx *ext.Context, u *ext.Update) error {
 	)
 	hash := utils.GetShortHash(fullHash)
 
-	// Make the filename safe for the URL by replacing spaces with underscores
-	safeFileName := "downloaded_file"
-	if file.FileName != "" {
-		safeFileName = strings.ReplaceAll(file.FileName, " ", "_")
-	}
-
-	// Inject the safe filename directly into the URL structure
-	link := fmt.Sprintf("%s/stream/%d/%s?hash=%s", config.ValueOf.Host, messageID, safeFileName, hash)
+	// Cleaned up link generation - no more messy filenames in the URL
+	link := fmt.Sprintf("%s/stream/%d?hash=%s", config.ValueOf.Host, messageID, hash)
 	
 	text := styling.Code(link)
 	row := tg.KeyboardButtonRow{
